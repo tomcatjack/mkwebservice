@@ -1,0 +1,24 @@
+<configuration scan="true" scanPeriod="10 seconds">
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <include resource="config/base-log.xml"/>
+    <jmxConfigurator/>
+
+    <appender name="OMS_WEB_SERVICES_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/oms-web-services.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/oms-web-services-%d{yyyyMMdd}-%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>${LOG_PATTERN}</Pattern>
+        </layout>
+    </appender>
+    <logger name="com.greatonce.mkwebservice.service" level="DEBUG" additivity="false">
+        <appender-ref ref="OMS_WEB_SERVICES_FILE"/>
+    </logger>
+
+</configuration>
