@@ -1,7 +1,10 @@
 server:
   port: 8090
 logging:
+  path: log
   config:
     classpatch: logback-spring.xml
 
-  path: log
+mk:
+  api:
+    url: http://39.98.73.106:30003/api.do

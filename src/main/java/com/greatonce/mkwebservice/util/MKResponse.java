@@ -1,6 +1,5 @@
-package com.greatonce.mkwebservice;
+package com.greatonce.mkwebservice.util;
 
-import com.alibaba.fastjson.JSONArray;
 import lombok.Data;
 
 /**
@@ -12,6 +11,6 @@ import lombok.Data;
 public class MKResponse {
 
   private String status;
-  private JSONArray data;
+  private Object data;
 
 }

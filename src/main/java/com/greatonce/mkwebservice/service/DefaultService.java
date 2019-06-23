@@ -1,6 +1,9 @@
 package com.greatonce.mkwebservice.service;
 
-import com.greatonce.mkwebservice.MKResponse;
+import com.greatonce.mkwebservice.request.CustomerDTO;
+import com.greatonce.mkwebservice.util.MKResponse;
+
+import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 /**
@@ -11,7 +14,11 @@ import javax.jws.WebService;
 @WebService
 public interface DefaultService {
 
+    @WebMethod
     String sayHello(String user);
 
-    MKResponse getStore(String code);
+    @WebMethod
+    MKResponse insertCustomer(CustomerDTO customer);
+
+
 }

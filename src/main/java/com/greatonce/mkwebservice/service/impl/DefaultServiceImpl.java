@@ -1,13 +1,19 @@
 package com.greatonce.mkwebservice.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.greatonce.mkwebservice.MKResponse;
+import com.greatonce.mkwebservice.request.CustomerDTO;
+import com.greatonce.mkwebservice.util.MKResponse;
 import com.greatonce.mkwebservice.service.DefaultService;
-import com.greatonce.mkwebservice.util.WebUtil;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
+
+import com.greatonce.mkwebservice.util.MkRequestUtil;
+import com.greatonce.mkwebservice.util.MkResponseUtil;
+import com.greatonce.mkwebservice.util.WebUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @sum ：
@@ -18,6 +24,9 @@ public class DefaultServiceImpl implements DefaultService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DefaultServiceImpl.class);
 
+  @Autowired
+  private MkRequestUtil mkRequestUtil;
+
   @Override
   public String sayHello(String user) {
     LOGGER.info("请求信息:{}",user);
@@ -25,32 +34,18 @@ public class DefaultServiceImpl implements DefaultService {
   }
 
   @Override
-  public MKResponse getStore(String code) {
-    LOGGER.info("请求信息:{}",code);
-    String appkey = "884845954";
-    String appSecreat = "57010385-5dcc-4ad5-99b6-e42fba808203";
-    //按照你请求接口填具体的method
-    String method = "greatonce.returnOrder.qcConfirm";
-    //拼装url  注意URl里面是不能有特殊字符 （空格等）
-    String url = "http://39.98.73.106:30003/api.do?method="+method+"&v=v3.0";
-    System.out.println(url);
+  public MKResponse insertCustomer(CustomerDTO customer) {
+    LOGGER.info("请求信息:{}", JSONObject.toJSON(customer));
+    //校验参数合法性
+    //TODO
     JSONObject jsonObject = new JSONObject();
-    jsonObject.put("code",code);
-    try {
-      String s = WebUtil.doPost(url, jsonObject.toJSONString());
-      JSONObject jsonObject1 = JSONObject.parseObject(s);
-      MKResponse mkResponse = new MKResponse();
-      if("0".equalsIgnoreCase(jsonObject1.getString("status"))){
-        mkResponse.setStatus("0");
-//        mkResponse.setData(jsonObject1.getJSONArray("data"));
-        return mkResponse;
-      }else{
-        mkResponse.setStatus("1");
-      }
-      return mkResponse;
-    } catch (IOException e) {
-      LOGGER.error("异常",e);
-      return null;
+    jsonObject.put("code",customer.getCode());
+    JSONObject dopost = mkRequestUtil.dopost("greatonce.customer.create", jsonObject);
+    if("0".equals(dopost.getString("status"))){
+        return MkResponseUtil.resultSuccessResponse("新增会员成功");
+    }else{
+      return MkResponseUtil.resultFailureResponse(dopost.getString("message"));
     }
+
   }
 }
